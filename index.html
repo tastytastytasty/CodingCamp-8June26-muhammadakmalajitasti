@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="light">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bad Habit Tracker</title>
+    <link rel="stylesheet" href="CSS/style.css" />
+    <!-- Icon -->
+    <link href="https://cdn.boxicons.com/3.0.8/fonts/basic/boxicons.min.css" rel="stylesheet" />
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+
+<body>
+    <!-- ===== HEADER ===== -->
+    <header class="header">
+        <div class="header-inner container">
+            <div class="header-title">
+                <i class="header-icon bx bx-hourglass"></i>
+                <h1>Bad Habit Tracker</h1>
+            </div>
+            <button id="themeToggle" class="btn-icon" title="Toggle Dark/Light Mode" aria-label="Toggle theme">
+                <i class="bx bx-moon" id="themeIcon"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <!-- ===== TOTAL WAKTU ===== -->
+        <section class="card total-card" aria-label="Total waktu terbuang">
+            <p class="total-label">Total Waktu Terbuang</p>
+            <p id="totalTime" class="total-value">0 Jam 0 Menit</p>
+        </section>
+
+        <!-- ===== GRID: FORM + CHART ===== -->
+        <div class="grid-top">
+
+            <!-- FORM INPUT -->
+            <section class="card form-card">
+                <h2 class="section-title">Tambah Aktivitas</h2>
+                <form id="activityForm" novalidate>
+
+                    <div class="form-group">
+                        <label for="activityName">Nama Aktivitas</label>
+                        <input type="text" id="activityName" placeholder="Contoh: Scrolling TikTok"
+                            autocomplete="off" />
+                        <span class="error-msg" id="errName"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="duration">Durasi</label>
+                        <div class="duration-row">
+                            <input type="number" id="duration" placeholder="60" min="1" />
+                            <select id="durationUnit">
+                                <option value="minutes">Menit</option>
+                                <option value="hours">Jam</option>
+                            </select>
+                        </div>
+                        <span class="error-msg" id="errDuration"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category">Kategori</label>
+                        <select id="category"></select>
+                        <span class="error-msg" id="errCategory"></span>
+                    </div>
+
+                    <!-- Custom category -->
+                    <div class="form-group">
+                        <label for="newCategory">Tambah Kategori Baru</label>
+                        <div class="custom-cat-row">
+                            <input type="text" id="newCategory" placeholder="Contoh: YouTube" autocomplete="off" />
+                            <button type="button" id="addCategoryBtn" class="btn btn-secondary">+ Tambah</button>
+                        </div>
+                        <span class="error-msg" id="errNewCat"></span>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Simpan Aktivitas</button>
+                </form>
+            </section>
+
+            <!-- PIE CHART -->
+            <section class="card chart-card">
+                <h2 class="section-title">Distribusi Kategori</h2>
+                <div class="chart-wrapper">
+                    <canvas id="pieChart" aria-label="Pie chart distribusi aktivitas" role="img"></canvas>
+                </div>
+                <p id="chartEmpty" class="chart-empty">Belum ada data aktivitas.</p>
+            </section>
+
+        </div><!-- /grid-top -->
+
+        <!-- ===== CATEGORY MANAGER ===== -->
+        <section class="card cat-manager-card">
+            <h2 class="section-title">Kelola Kategori Kustom</h2>
+            <p class="cat-manager-hint">Kategori bawaan (TikTok, Instagram, YouTube) tidak dapat dihapus.</p>
+            <div id="customCatList" class="cat-manager-list">
+                <!-- injected by JS -->
+            </div>
+        </section>
+
+        <!-- ===== CONTROLS: LIMIT + SORT + VIEW ===== -->
+        <div class="controls-bar card">
+
+            <!-- Batas durasi -->
+            <div class="control-group">
+                <label for="limitInput">Batas Durasi (menit)</label>
+                <div class="limit-row">
+                    <input type="number" id="limitInput" placeholder="120" min="1" />
+                    <button id="setLimitBtn" class="btn btn-secondary">Set</button>
+                </div>
+                <span id="limitDisplay" class="limit-info"></span>
+            </div>
+
+            <!-- Sort -->
+            <div class="control-group">
+                <label for="sortSelect">Urutkan</label>
+                <select id="sortSelect">
+                    <option value="default">Default (Terbaru)</option>
+                    <option value="dur-desc">Durasi Terbesar</option>
+                    <option value="dur-asc">Durasi Terkecil</option>
+                    <option value="category">Nama Kategori</option>
+                </select>
+            </div>
+
+            <!-- View toggle -->
+            <div class="control-group">
+                <label>Tampilan</label>
+                <div class="view-toggle">
+                    <button id="btnViewAll" class="btn btn-secondary active" data-view="all">Semua</button>
+                    <button id="btnViewMonthly" class="btn btn-secondary" data-view="monthly">Bulanan</button>
+                </div>
+            </div>
+
+        </div><!-- /controls-bar -->
+
+        <!-- ===== MONTHLY SUMMARY (hidden by default) ===== -->
+        <section id="monthlySummary" class="card monthly-card hidden">
+            <h2 class="section-title">Ringkasan Bulanan</h2>
+            <div id="monthlyContent"></div>
+        </section>
+
+        <!-- ===== ACTIVITY LIST ===== -->
+        <section class="card list-card">
+            <h2 class="section-title">Daftar Aktivitas</h2>
+            <ul id="activityList" class="activity-list" aria-label="Daftar aktivitas">
+                <!-- items injected by JS -->
+            </ul>
+            <p id="listEmpty" class="list-empty">Belum ada aktivitas. Tambahkan di form di atas.</p>
+        </section>
+
+    </main>
+
+    <script src="JS/script.js"></script>
+
+    <!-- ===== DELETE CATEGORY MODAL ===== -->
+    <div id="deleteCatModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-box">
+            <h3 class="modal-title" id="modalTitle">Hapus Kategori</h3>
+            <p class="modal-body">
+                Apakah Anda yakin ingin menghapus kategori
+                <strong id="modalCatName"></strong>?
+            </p>
+            <p id="modalUsageWarning" class="modal-warning" style="display:none;"></p>
+            <div class="modal-actions">
+                <button id="modalCancelBtn" class="btn btn-secondary">Batal</button>
+                <button id="modalConfirmBtn" class="btn btn-delete-confirm">Hapus</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
