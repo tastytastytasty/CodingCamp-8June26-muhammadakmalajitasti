@@ -81,12 +81,29 @@ function init() {
   renderCategoryManager();
   renderAll();
 
-  // Modal buttons
+  // Category modal buttons
+  $("closeCatModalBtn").addEventListener("click", closeDeleteModal);
   $("modalCancelBtn").addEventListener("click", closeDeleteModal);
   $("modalConfirmBtn").addEventListener("click", confirmDeleteCategory);
-  // Close modal on backdrop click
+  // Close category modal on backdrop click
   $("deleteCatModal").addEventListener("click", (e) => {
     if (e.target === $("deleteCatModal")) closeDeleteModal();
+  });
+
+  // Activity delete modal buttons
+  $("closeActivityModalBtn").addEventListener("click", closeDeleteActivityModal);
+  $("activityModalCancelBtn").addEventListener("click", closeDeleteActivityModal);
+  $("activityModalConfirmBtn").addEventListener("click", confirmDeleteActivity);
+  // Close activity modal on backdrop click
+  $("deleteActivityModal").addEventListener("click", (e) => {
+    if (e.target === $("deleteActivityModal")) closeDeleteActivityModal();
+  });
+  // Close modals on Escape key
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      closeDeleteModal();
+      closeDeleteActivityModal();
+    }
   });
 }
 
@@ -366,8 +383,39 @@ function clearError(el) {
 }
 
 /* ============================================================
-  DELETE Activity
+   DELETE Activity — with confirmation modal
    ============================================================ */
+let pendingDeleteActivityId = null;
+
+/** Open modal pre-filled with activity details; auto-focus Batal */
+function openDeleteActivityModal(id) {
+  const activity = activities.find((a) => a.id === id);
+  if (!activity) return;
+
+  pendingDeleteActivityId = id;
+
+  $("modalActivityName").textContent     = activity.name;
+  $("modalActivityDuration").textContent = formatMinutes(activity.durationMinutes);
+  $("modalActivityCategory").textContent = activity.category;
+
+  const modal = $("deleteActivityModal");
+  modal.classList.add("modal-open");
+
+  // Auto-focus Batal to prevent accidental confirm
+  requestAnimationFrame(() => $("activityModalCancelBtn").focus());
+}
+
+function closeDeleteActivityModal() {
+  pendingDeleteActivityId = null;
+  $("deleteActivityModal").classList.remove("modal-open");
+}
+
+function confirmDeleteActivity() {
+  if (!pendingDeleteActivityId) return;
+  deleteActivity(pendingDeleteActivityId);
+  closeDeleteActivityModal();
+}
+
 function deleteActivity(id) {
   activities = activities.filter((a) => a.id !== id);
   saveActivities();
@@ -489,7 +537,7 @@ function renderActivityList() {
     `;
 
     li.querySelector(".btn-danger").addEventListener("click", () =>
-      deleteActivity(activity.id),
+      openDeleteActivityModal(activity.id),
     );
     activityListEl.appendChild(li);
   });

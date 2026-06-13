@@ -673,9 +673,69 @@ select option {
   font-size: 1.0625rem;
   font-weight: 700;
   color: var(--text);
-  margin-bottom: .75rem;
+  margin-bottom: 0;
 }
 
+/* Modal header row: title + close × */
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: .875rem;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: .1rem .35rem;
+  border-radius: 6px;
+  transition: color var(--transition), background var(--transition);
+}
+
+.modal-close:hover {
+  color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 10%, transparent);
+}
+
+/* Activity detail card inside modal */
+.modal-activity-detail {
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  padding: .875rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  margin-bottom: .25rem;
+}
+
+.modal-detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: .5rem;
+  font-size: .9rem;
+}
+
+.modal-detail-label {
+  font-weight: 600;
+  color: var(--text-muted);
+  font-size: .8125rem;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  flex-shrink: 0;
+}
+
+.modal-detail-value {
+  color: var(--text);
+  font-weight: 600;
+  text-align: right;
+  word-break: break-word;
+}
 .modal-body {
   font-size: .9375rem;
   color: var(--text);

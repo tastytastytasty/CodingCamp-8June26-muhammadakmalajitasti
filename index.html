@@ -32,6 +32,7 @@
         <section class="card total-card" aria-label="Total waktu terbuang">
             <p class="total-label">Total Waktu Terbuang</p>
             <p id="totalTime" class="total-value">0 Jam 0 Menit</p>
+            <p>"Waktu yang hilang tidak bisa diulang."</p>
         </section>
 
         <!-- ===== GRID: FORM + CHART ===== -->
@@ -155,9 +156,12 @@
     <script src="JS/script.js"></script>
 
     <!-- ===== DELETE CATEGORY MODAL ===== -->
-    <div id="deleteCatModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div id="deleteCatModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modalCatTitle">
         <div class="modal-box">
-            <h3 class="modal-title" id="modalTitle">Hapus Kategori</h3>
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalCatTitle">Hapus Kategori</h3>
+                <button class="modal-close" id="closeCatModalBtn" aria-label="Tutup modal">×</button>
+            </div>
             <p class="modal-body">
                 Apakah Anda yakin ingin menghapus kategori
                 <strong id="modalCatName"></strong>?
@@ -166,6 +170,38 @@
             <div class="modal-actions">
                 <button id="modalCancelBtn" class="btn btn-secondary">Batal</button>
                 <button id="modalConfirmBtn" class="btn btn-delete-confirm">Hapus</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== DELETE ACTIVITY MODAL ===== -->
+    <div id="deleteActivityModal" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modalActivityTitle">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalActivityTitle">Hapus Aktivitas</h3>
+                <button class="modal-close" id="closeActivityModalBtn" aria-label="Tutup modal">×</button>
+            </div>
+            <!-- Activity detail card -->
+            <div class="modal-activity-detail" id="modalActivityDetail">
+                <div class="modal-detail-row">
+                    <span class="modal-detail-label">Aktivitas</span>
+                    <span class="modal-detail-value" id="modalActivityName">—</span>
+                </div>
+                <div class="modal-detail-row">
+                    <span class="modal-detail-label">Durasi</span>
+                    <span class="modal-detail-value" id="modalActivityDuration">—</span>
+                </div>
+                <div class="modal-detail-row">
+                    <span class="modal-detail-label">Kategori</span>
+                    <span class="modal-detail-value" id="modalActivityCategory">—</span>
+                </div>
+            </div>
+            <p class="modal-body" style="margin-top:.75rem;">
+                Apakah Anda yakin ingin menghapus aktivitas ini?
+            </p>
+            <div class="modal-actions">
+                <button id="activityModalCancelBtn" class="btn btn-secondary">Batal</button>
+                <button id="activityModalConfirmBtn" class="btn btn-delete-confirm">Hapus</button>
             </div>
         </div>
     </div>
